@@ -1,0 +1,34 @@
+name: Delete API instance
+on:
+  workflow_dispatch
+
+jobs:
+  deleteAPI:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      # Install Node on the runner
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install anypoint-cli
+        run: |
+          npm install -g anypoint-cli-v4
+      - name: check version
+        run: |
+          anypoint-cli-v4 --version
+      - name: Set Authentication
+        env:
+          MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
+          MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
+          MULE_ORG_ID: ${{ vars.MULE_ORG_ID }}
+        run: |
+          anypoint-cli-v4 conf username $MULE_USERNAME
+          anypoint-cli-v4 conf password $MULE_PASSWORD
+          anypoint-cli-v4 conf organization $MULE_ORG_ID
+      - name: Delete API
+        env:
+          MULE_BG_ID: ${{ vars.MULE_BG_ID }}
+          API_ID: ${{ vars.API_ID }}
+        run: |
+          anypoint-cli-v4 api-mgr:api:delete --environment Development --organization $MULE_BG_ID $API_ID
