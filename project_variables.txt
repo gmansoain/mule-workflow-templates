@@ -1,0 +1,3 @@
+API_LAYER="System"
+REPLICAS="1"
+CORES="0.1"
