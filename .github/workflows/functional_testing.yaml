@@ -1,0 +1,27 @@
+name: Build and deploy to Dev
+
+# Controls when the workflow will run
+on:
+ # push:
+ #   branches: [ feature ]
+  workflow_dispatch:
+    
+        
+jobs:
+  testAPI:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Install Node on the runner
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    # Install Newman
+    - name: Install Newman
+      run: |
+        npm install -g newman
+        npm install -g newman-reporter-htmlextra
+    # Run tests
+    - name: Run tests
+      run: |
+        newman run postman/testing/dev/app-dev-testing-collection.json -e postman/testing/dev/app-dev-testing-environment.json   
