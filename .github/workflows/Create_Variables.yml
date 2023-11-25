@@ -13,4 +13,5 @@ jobs:
       run: |
         gh variable set -f repo_variables.txt
         gh variable set --env Development -f dev_variables.txt
+        gh variable set --env Production -f prod_variables.txt
 
