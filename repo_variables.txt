@@ -1,7 +1,3 @@
 API_LAYER="System"
-REPLICAS="1"
-CORES="0.1"
-ENVIRONMENT="Development"
-APP_ENV="dev"
 ASSET_ID="slack-system-api"
 ASSET_VERSION="1.0.1"
