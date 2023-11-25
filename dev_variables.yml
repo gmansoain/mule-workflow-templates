@@ -1,0 +1,4 @@
+REPLICAS="1"
+CORES="0.1"
+ENVIRONMENT="Development"
+APP_ENV="dev"
