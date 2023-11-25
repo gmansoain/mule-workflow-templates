@@ -1,0 +1,41 @@
+name: Create API Manager instances in Dev/Prod
+on:
+  workflow_dispatch:
+
+jobs:
+  create_apim_instance:
+    environment: Development
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Install Node on the runner
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install anypoint-cli
+      run: |
+        npm install -g anypoint-cli-v4
+    - name: check version
+      run: |
+        anypoint-cli-v4 --version
+    - name: Set Authentication
+      env:
+        MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
+        MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
+        MULE_ORG_ID: ${{ vars.MULE_ORG_ID }}
+      run: |
+        anypoint-cli-v4 conf username $MULE_USERNAME
+        anypoint-cli-v4 conf password $MULE_PASSWORD
+        anypoint-cli-v4 conf organization $MULE_ORG_ID
+    - name: Create APIM instance in Dev
+      env:
+        ASSET_ID: ${{ vars.ASSET_ID }}
+        ASSET_VERSION: ${{ vars.ASSET_VERSION }}
+        MULE_BG_ID: ${{ vars.MULE_BG_ID }}
+      run: |
+          anypoint-cli-v4 api-mgr:api:manage -m --deploymentType=cloudhub --organization $MULE_BG_ID --environment=Development $ASSET_ID $ASSET_VERSION | sed -e "s/Created new API with ID: //g" > ./api_id_dev.txt
+    - name: Create variable in Dev environment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
+      run: |
+        gh variable set API_ID --env Development --body "$(cat ./api_id_dev.txt)"
