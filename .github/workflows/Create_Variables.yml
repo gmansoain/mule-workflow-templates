@@ -11,9 +11,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
       run: |
-      # gh auth status
         gh variable set -f project_variables.txt
 
+      # gh auth status
       # gh variable set API_LAYER --body "System"
       #  gh variable set CORES --body "0.1"
       #  gh variable set REPLICAS --body "1"
