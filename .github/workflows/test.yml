@@ -1,0 +1,12 @@
+name: Test conditional
+on:
+  workflow_dispatch:
+
+jobs:
+  conditional:
+  if: vars.API_ID == 0000
+  runs-on: ubuntu-latest
+  steps:
+  - name: Echo hello
+    run: echo Hello Gon!
+    
