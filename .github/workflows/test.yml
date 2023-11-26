@@ -11,5 +11,5 @@ jobs:
       run: echo Es cero
     - name: Echo uno
       if: ${{ vars.API_ID == 0000 }}
-      run: Echo cero
+      run: echo cero
     
