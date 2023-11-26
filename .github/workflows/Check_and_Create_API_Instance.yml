@@ -5,7 +5,6 @@ on:
 jobs:
   create_apim_instance:
     environment: Development
-    if: ${{ vars.HAS_API_ID == 'false' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -29,6 +28,7 @@ jobs:
         anypoint-cli-v4 conf password $MULE_PASSWORD
         anypoint-cli-v4 conf organization $MULE_ORG_ID
     - name: Create APIM instance in Dev
+      if: ${{ vars.HAS_API_ID == 'false' }}
       env:
         ASSET_ID: ${{ vars.ASSET_ID }}
         ASSET_VERSION: ${{ vars.ASSET_VERSION }}
@@ -36,6 +36,7 @@ jobs:
       run: |
           anypoint-cli-v4 api-mgr:api:manage -m --deploymentType=cloudhub --organization $MULE_BG_ID --environment=Development $ASSET_ID $ASSET_VERSION | sed -e "s/Created new API with ID: //g" > ./api_id_dev.txt
     - name: Create variable in Dev environment
+      if: ${{ vars.HAS_API_ID == 'false' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
       run: |
