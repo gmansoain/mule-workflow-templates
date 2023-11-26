@@ -32,3 +32,8 @@ jobs:
           API_ID: ${{ vars.API_ID }}
         run: |
           anypoint-cli-v4 api-mgr:api:delete --environment Development --organization $MULE_BG_ID $API_ID
+      - name: Update flag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
+      run: |
+        gh variable set DEV_HAS_API_ID --body 'No'
