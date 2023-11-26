@@ -4,7 +4,8 @@ on:
 
 jobs:
   create_apim_instance:
-    if: ${{ vars.HAS_API_ID }}
+    environment: Development
+    if: ${{ vars.API_ID != 0000 }}
     environment: Development
     runs-on: ubuntu-latest
     steps:
