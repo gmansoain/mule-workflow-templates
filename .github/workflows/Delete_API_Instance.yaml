@@ -21,14 +21,14 @@ jobs:
         env:
           MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
           MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
-          MULE_ORG_ID: ${{ vars.MULE_ORG_ID }}
+          MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
         run: |
           anypoint-cli-v4 conf username $MULE_USERNAME
           anypoint-cli-v4 conf password $MULE_PASSWORD
           anypoint-cli-v4 conf organization $MULE_ORG_ID
       - name: Delete API
         env:
-          MULE_BG_ID: ${{ vars.MULE_BG_ID }}
+          MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
           API_ID: ${{ vars.API_ID }}
         run: |
           anypoint-cli-v4 api-mgr:api:delete --environment Development --organization $MULE_BG_ID $API_ID
