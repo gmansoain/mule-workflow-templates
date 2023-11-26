@@ -28,7 +28,7 @@ jobs:
         anypoint-cli-v4 conf password $MULE_PASSWORD
         anypoint-cli-v4 conf organization $MULE_ORG_ID
     - name: Create APIM instance in Dev
-      if: ${{ vars.API_ID != 0000 }}
+      if: ${{ vars.API_ID == 0000 }}
       env:
         ASSET_ID: ${{ vars.ASSET_ID }}
         ASSET_VERSION: ${{ vars.ASSET_VERSION }}
@@ -36,7 +36,7 @@ jobs:
       run: |
           anypoint-cli-v4 api-mgr:api:manage -m --deploymentType=cloudhub --organization $MULE_BG_ID --environment=Development $ASSET_ID $ASSET_VERSION | sed -e "s/Created new API with ID: //g" > ./api_id_dev.txt
     - name: Create variable in Dev environment
-      if: ${{ vars.HAS_API_ID == 'false' }}
+      if: ${{ vars.API_ID == 0000 }}
       env:
         GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
       run: |
