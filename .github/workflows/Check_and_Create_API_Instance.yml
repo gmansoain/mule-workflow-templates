@@ -6,7 +6,6 @@ jobs:
   create_apim_instance:
     environment: Development
     if: ${{ vars.API_ID != 0000 }}
-    environment: Development
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
