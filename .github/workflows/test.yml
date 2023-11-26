@@ -4,9 +4,12 @@ on:
 
 jobs:
   conditional:
-    if: ${{ vars.API_ID != 0000 }}
     runs-on: ubuntu-latest
     steps:
-    - name: Echo hello
-      run: echo Hello Gon!
+    - name: Echo cero
+      if: ${{ vars.API_ID != 0000 }}
+      run: echo Es cero
+    - name: Echo uno
+      if: ${{ vars.API_ID == 0000 }}
+      run: Echo cero
     
