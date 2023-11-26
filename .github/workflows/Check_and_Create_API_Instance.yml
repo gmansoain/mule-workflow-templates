@@ -4,7 +4,7 @@ on:
 
 jobs:
   create_apim_instance:
-    if: ${{ vars.HAS_API_ID }}
+    if: ${{ vars.HAS_API_ID == }}
     environment: Development
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,6 @@ jobs:
       run: |
           anypoint-cli-v4 api-mgr:api:manage -m --deploymentType=cloudhub --organization $MULE_BG_ID --environment=Development $ASSET_ID $ASSET_VERSION | sed -e "s/Created new API with ID: //g" > ./api_id_dev.txt
     - name: Create variable in Dev environment
-      if: ${{ vars.HAS_API_ID == "false" }}
       env:
         GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
       run: |
