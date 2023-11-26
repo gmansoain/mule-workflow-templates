@@ -4,6 +4,7 @@ on:
 
 jobs:
   create_apim_instance:
+    if: ${{ vars.HAS_API_ID }}
     environment: Development
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +29,6 @@ jobs:
         anypoint-cli-v4 conf password $MULE_PASSWORD
         anypoint-cli-v4 conf organization $MULE_ORG_ID
     - name: Create APIM instance in Dev
-      if: ${{ vars.HAS_API_ID == "false" }}
       env:
         ASSET_ID: ${{ vars.ASSET_ID }}
         ASSET_VERSION: ${{ vars.ASSET_VERSION }}
