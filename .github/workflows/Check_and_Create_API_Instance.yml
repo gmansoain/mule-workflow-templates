@@ -4,8 +4,8 @@ on:
 
 jobs:
   create_apim_instance:
-    if: ${{ vars.HAS_API_ID == 'false' }}
     environment: Development
+    if: ${{ vars.HAS_API_ID == 'false' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
