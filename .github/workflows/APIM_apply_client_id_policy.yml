@@ -1,7 +1,10 @@
 name: Apply Client ID Enforcement Policy
+# Controls when the workflow will run
 on:
-  workfLow_dispatch:
-
+ # push:
+ #   branches: [ feature ]
+  workflow_dispatch:
+  
 jobs: 
   applyPolicy:
     runs-on: ubuntu-latest
