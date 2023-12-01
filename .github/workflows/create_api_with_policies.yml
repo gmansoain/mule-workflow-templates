@@ -1,0 +1,17 @@
+name: Create API Instance with Policies
+
+on: push
+
+jobs:
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run "3257783-95fc3a2a-82bb-4fa3-930e-7d5455598f0d" -e "3257783-5d468743-b50a-446a-87a4-3533a63fd492"
