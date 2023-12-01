@@ -1,6 +1,7 @@
 name: Create API Instance with Policies
 
-on: push
+on:
+  workflow_dispatch:
 
 jobs:
   automated-api-tests:
