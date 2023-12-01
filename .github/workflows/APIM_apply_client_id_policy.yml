@@ -1,6 +1,6 @@
 name: Apply Client ID Enforcement Policy
 on:
-  worklfow_dispatch:
+  workfLow_dispatch:
 
 jobs: 
   applyPolicy:
