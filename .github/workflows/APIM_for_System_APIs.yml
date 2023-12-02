@@ -44,7 +44,7 @@ jobs:
     needs: create_apim_instance
     runs-on: ubuntu-latest
     environment: Development
-    if: ${{ vars.API_LAYER == 'Process' }}
+    if: ${{ vars.API_LAYER == 'System' }}
     steps:
     - uses: actions/setup-node@v4
       with:
