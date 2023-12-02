@@ -1,0 +1,43 @@
+name: Apply XML Threat Protection Policy
+# Controls when the workflow will run
+on:
+ # push:
+ #   branches: [ feature ]
+  workflow_dispatch:
+  
+jobs: 
+  applyPolicy:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install anypoint-cli
+      run: |
+        npm install -g anypoint-cli-v4
+    - name: check version
+      run: |
+        anypoint-cli-v4 --version
+    - name: Set Authentication
+      env:
+        MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
+        MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
+        MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
+      run: |
+        anypoint-cli-v4 conf username $MULE_USERNAME
+        anypoint-cli-v4 conf password $MULE_PASSWORD
+        anypoint-cli-v4 conf organization $MULE_ORG_ID
+    - name: Apply Policy
+      env:
+        API_ID: ${{ vars.API_ID }}
+        MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
+        ENVIRONMENT: ${{ vars.environment }}        
+      run: |
+        anypoint-cli-v4 api-mgr policy apply 19140559 xml-threat-protection \
+        --organization $MULE_BG_ID \
+        --environment=$ENVIRONMENT \
+        --groupId 68ef9520-24e9-4cf2-b2f5-620025690913 \
+        --policyVersion 1.1.4 \
+        --config '{"maxNodeDepth": -1, "maxAttributeCountPerElement": -1, "maxChildCount": -1, "maxTextLength": -1, "maxAttributeLength": -1,"maxCommentLength": -1}'
+  
