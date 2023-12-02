@@ -1,4 +1,4 @@
-name: PCreate API Instance with Policies
+name: Postman - Create API Instance with Policies
 
 on:
   workflow_dispatch:
