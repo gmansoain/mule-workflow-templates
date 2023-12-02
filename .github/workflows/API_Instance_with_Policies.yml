@@ -63,7 +63,7 @@ jobs:
         anypoint-cli-v4 conf username $MULE_USERNAME
         anypoint-cli-v4 conf password $MULE_PASSWORD
         anypoint-cli-v4 conf organization $MULE_ORG_ID
-    - name: Apply Policy
+    - name: Apply Client ID Enforcement Policy
       env:
         API_ID: ${{ vars.API_ID }}
         MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
@@ -80,9 +80,8 @@ jobs:
         MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
         ENVIRONMENT: ${{ vars.environment }}        
       run: |
-        anypoint-cli-v4 api-mgr policy apply 19140559 spike-control \
-        --organization fc9e3283-a489-4e88-99aa-cceea4aa5ea1 \
-        --environment=Development \
+        anypoint-cli-v4 api-mgr policy apply $API_ID spike-control \
+        --organization $MULE_BG_ID --environment=$ENVIRONMENT \
         --groupId 68ef9520-24e9-4cf2-b2f5-620025690913 \
         --policyVersion 1.2.1 \
         --config '{"maximumRequests": 1, "timePeriodInMilliseconds": 1000, "delayTimeInMillis": 1000, "delayAttempts": 1, "queuingLimit": 5, "exposeHeaders": false}'    
