@@ -1,0 +1,88 @@
+name: APIM for System APIs
+on:
+  workflow_dispatch:
+
+jobs:
+  create_apim_instance:
+    environment: Development
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Install Node on the runner
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install anypoint-cli
+      run: |
+        npm install -g anypoint-cli-v4
+    - name: check version
+      run: |
+        anypoint-cli-v4 --version
+    - name: Set Authentication
+      env:
+        MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
+        MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
+        MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
+      run: |
+        anypoint-cli-v4 conf username $MULE_USERNAME
+        anypoint-cli-v4 conf password $MULE_PASSWORD
+        anypoint-cli-v4 conf organization $MULE_ORG_ID
+    - name: Create APIM instance in Dev
+      env:
+        ASSET_ID: ${{ vars.ASSET_ID }}
+        ASSET_VERSION: ${{ vars.ASSET_VERSION }}
+        MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
+      run: |
+          anypoint-cli-v4 api-mgr:api:manage -m --deploymentType=cloudhub --organization $MULE_BG_ID --environment=Development $ASSET_ID $ASSET_VERSION | sed -e "s/Created new API with ID: //g" > ./api_id_dev.txt
+    - name: Create variable in Dev environment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GON_GITHUB_TOKEN }}
+      run: |
+        gh variable set API_ID --env Development --body "$(cat ./api_id_dev.txt)"
+        
+  applyPolicies:
+    needs: create_apim_instance
+    runs-on: ubuntu-latest
+    environment: Development
+    if: ${{ vars.API_LAYER == 'Process' }}
+    steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install anypoint-cli
+      run: |
+        npm install -g anypoint-cli-v4
+    - name: check version
+      run: |
+        anypoint-cli-v4 --version
+    - name: Set Authentication
+      env:
+        MULE_USERNAME: ${{ secrets.MULE_USERNAME }}
+        MULE_PASSWORD: ${{ secrets.MULE_PASSWORD }}
+        MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
+      run: |
+        anypoint-cli-v4 conf username $MULE_USERNAME
+        anypoint-cli-v4 conf password $MULE_PASSWORD
+        anypoint-cli-v4 conf organization $MULE_ORG_ID
+    - name: Apply Client ID Enforcement Policy
+      env:
+        API_ID: ${{ vars.API_ID }}
+        MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
+        ENVIRONMENT: ${{ vars.environment }}        
+      run: |
+        anypoint-cli-v4 api-mgr policy apply $API_ID client-id-enforcement \
+        --organization $MULE_BG_ID --environment=$ENVIRONMENT \
+        --groupId 68ef9520-24e9-4cf2-b2f5-620025690913 \
+        --policyVersion 1.2.3 \
+        --config '{"credentialsOriginHasHttpBasicAuthenticationHeader": "customExpression", "clientIdExpression":"#[attributes.headers['client_id']]", "clientSecretExpression":"#[attributes.headers['client_secret']]"}'
+    - name: Apply Spike Control Policy
+      env:
+        API_ID: ${{ vars.API_ID }}
+        MULE_BG_ID: ${{ secrets.MULE_BG_ID }}
+        ENVIRONMENT: ${{ vars.environment }}        
+      run: |
+        anypoint-cli-v4 api-mgr policy apply $API_ID spike-control \
+        --organization $MULE_BG_ID --environment=$ENVIRONMENT \
+        --groupId 68ef9520-24e9-4cf2-b2f5-620025690913 \
+        --policyVersion 1.2.1 \
+        --config '{"maximumRequests": 1, "timePeriodInMilliseconds": 1000, "delayTimeInMillis": 1000, "delayAttempts": 1, "queuingLimit": 5, "exposeHeaders": false}'    
