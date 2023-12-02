@@ -80,7 +80,7 @@ jobs:
     needs: create_apim_instance
     runs-on: ubuntu-latest
     environment: Development
-    if: ${{ vars.API_LAYER == 'System' }}
+    if: ${{ vars.API_LAYER == 'Process' }}
     steps:
     - uses: actions/setup-node@v4
       with:
@@ -116,7 +116,7 @@ jobs:
     needs: create_apim_instance
     runs-on: ubuntu-latest
     environment: Development
-    if: ${{ vars.API_LAYER == 'Process' }}
+    if: ${{ vars.API_LAYER == 'Experience' }}
     steps:
     - uses: actions/setup-node@v4
       with:
