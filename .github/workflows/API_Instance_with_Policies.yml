@@ -41,6 +41,7 @@ jobs:
         gh variable set API_ID --env Development --body "$(cat ./api_id_dev.txt)"
         
   applyPolicy:
+    needs: create_apim_instance
     runs-on: ubuntu-latest
     environment: Development
     steps:
