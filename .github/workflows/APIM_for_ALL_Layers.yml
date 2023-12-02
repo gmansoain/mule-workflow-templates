@@ -87,7 +87,7 @@ jobs:
         --policyVersion 1.2.1 \
         --config '{"maximumRequests": 1, "timePeriodInMilliseconds": 1000, "delayTimeInMillis": 1000, "delayAttempts": 1, "queuingLimit": 5, "exposeHeaders": false}'    
 
-applyProcessAPIPolicies:
+  applyProcessAPIPolicies:
     needs: create_apim_instance
     runs-on: ubuntu-latest
     environment: Development
